@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSimulationStore } from '../store/useSimulationStore';
-import { AlertTriangle, Wifi, RotateCcw, Power, Terminal, Smartphone, MessageSquare } from 'lucide-react';
+import { AlertTriangle, Wifi, RotateCcw, Power, Terminal } from 'lucide-react';
 
 export const UIOverlay: React.FC = () => {
-    const { transformerStatus, faultLocation, faultTimer, resetSimulation, toggleTransformer, logs, lastSms, clearSms } = useSimulationStore();
+    const { transformerStatus, resetSimulation, logs, lastSms, poles } = useSimulationStore();
     const [showPhone, setShowPhone] = useState(true);
+
+    const warningPole = poles.find(p => p.status === 'WARNING');
+    const faultLocation = warningPole ? warningPole.name : null;
+    const faultTimer = warningPole ? warningPole.faultTimer : 0;
 
     // Auto-open phone when SMS arrives
     useEffect(() => {
